@@ -1,6 +1,6 @@
 # WordPy CMS - WordPress com Python e Django
 
-Um sistema completo de gerenciamento de conteúdo (CMS) inspirado no WordPress, desenvolvido com Python e Django. Não foi realizada uma conversão do PHP para o Python.
+Um sistema completo e simples de gerenciamento de conteúdo (CMS) inspirado no WordPress, desenvolvido com Python e Django.
 
 ## Características Principais
 
@@ -548,7 +548,7 @@ Isso cria um carrossel rotativo de banners e adiciona à página home
 
 ## Próximos Passos
 
-Para melhorarmos ainda mais o CMS, vamos considerar adicionar:
+Para melhorar ainda mais o CMS, considere adicionar:
 
 - Sistema de usuários frontend (registro, login, perfis)
 - Sistema de widgets/sidebars customizáveis

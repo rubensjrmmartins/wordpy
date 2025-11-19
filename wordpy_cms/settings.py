@@ -195,7 +195,7 @@ JAZZMIN_SETTINGS = {
         {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
         {"name": "Dashboard", "url": "/admin/dashboard/stats/", "permissions": ["auth.view_user"], "icon": "fas fa-chart-line"},
         {"name": "Configurações", "url": "/admin/blog/sitesettings/", "permissions": ["auth.view_user"], "icon": "fas fa-cogs"},
-        {"name": "Suporte", "url": "https://github.com/wordpy/wordpy", "new_window": True},
+        {"name": "Suporte", "url": "https://github.com/rubensjrmmartins/wordpy", "new_window": True},
         {"model": "auth.User"},
     ],
 
