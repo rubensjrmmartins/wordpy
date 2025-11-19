@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ site_settings.site_name }}{% endblock %}</title>
+
+    {% block meta %}
+    <meta name="description" content="{{ site_settings.site_description }}">
+    <meta name="keywords" content="{{ site_settings.meta_keywords }}">
+    {% endblock %}
+
+    <!-- CSS Dinâmico do Tema -->
+    <link rel="stylesheet" href="{% url 'blog:theme_css' %}">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+        }
+
+        header h1 a {
+            color: white;
+            text-decoration: none;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .search-form input[type="text"] {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            min-width: 200px;
+        }
+
+        .search-form button {
+            padding: 0.5rem 1rem;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .sidebar h3 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sidebar a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: #34495e;
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        footer .container {
+            text-align: center;
+        }
+
+        .social-links {
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            margin: 0 0.5rem;
+            text-decoration: none;
+        }
+
+        .messages {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .messages.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .messages.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .messages.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="{% url 'blog:home' %}">{{ site_settings.site_name }}</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'blog:home' %}">Início</a></li>
+                    <li><a href="{% url 'blog:post_list' %}">Blog</a></li>
+                    {% for page in menu_pages %}
+                    <li><a href="{% url 'blog:page_detail' page.slug %}">{{ page.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </nav>
+            <form method="get" action="{% url 'blog:search' %}" class="search-form">
+                <input type="text" name="q" placeholder="Buscar..." required>
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="messages {{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>{{ site_settings.footer_text|default:"&copy; 2025 Todos os direitos reservados." }}</p>
+
+            <div class="social-links">
+                {% if site_settings.facebook_url %}
+                <a href="{{ site_settings.facebook_url }}" target="_blank">Facebook</a>
+                {% endif %}
+                {% if site_settings.twitter_url %}
+                <a href="{{ site_settings.twitter_url }}" target="_blank">Twitter</a>
+                {% endif %}
+                {% if site_settings.instagram_url %}
+                <a href="{{ site_settings.instagram_url }}" target="_blank">Instagram</a>
+                {% endif %}
+                {% if site_settings.linkedin_url %}
+                <a href="{{ site_settings.linkedin_url }}" target="_blank">LinkedIn</a>
+                {% endif %}
+            </div>
+        </div>
+    </footer>
+
+    {% if site_settings.google_analytics_id %}
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site_settings.google_analytics_id }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ site_settings.google_analytics_id }}');
+    </script>
+    {% endif %}
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

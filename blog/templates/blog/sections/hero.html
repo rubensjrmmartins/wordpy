@@ -1,0 +1,35 @@
+{% load static %}
+<!-- Hero/Banner Section -->
+<section class="section-hero {{ section.custom_css_class }}" style="
+    {% if section.background_color == 'white' %}background: #fff;{% endif %}
+    {% if section.background_color == 'light' %}background: #f5f5f5;{% endif %}
+    {% if section.background_color == 'dark' %}background: #2c3e50; color: white;{% endif %}
+    {% if section.background_color == 'primary' %}background: #3498db; color: white;{% endif %}
+    {% if section.background_color == 'secondary' %}background: #34495e; color: white;{% endif %}
+    {% if section.image %}background-image: url('{{ section.image.url }}'); background-size: cover; background-position: center;{% endif %}
+    padding: 5rem 0; text-align: center; position: relative;">
+
+    {% if section.image %}
+    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5);"></div>
+    {% endif %}
+
+    <div class="container" style="position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        {% if section.title %}
+        <h1 style="font-size: 3rem; margin-bottom: 1rem; font-weight: bold;">{{ section.title }}</h1>
+        {% endif %}
+
+        {% if section.subtitle %}
+        <p style="font-size: 1.5rem; margin-bottom: 2rem; opacity: 0.9;">{{ section.subtitle }}</p>
+        {% endif %}
+
+        {% if section.content %}
+        <div style="font-size: 1.2rem; margin-bottom: 2rem;">{{ section.content|safe }}</div>
+        {% endif %}
+
+        {% if section.button_text %}
+        <a href="{{ section.button_link|default:'#' }}" style="display: inline-block; padding: 1rem 2.5rem; background: #e74c3c; color: white; text-decoration: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; transition: all 0.3s;">
+            {{ section.button_text }}
+        </a>
+        {% endif %}
+    </div>
+</section>

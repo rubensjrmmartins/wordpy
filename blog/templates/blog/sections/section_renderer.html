@@ -1,0 +1,31 @@
+{% comment %}
+Template para renderizar seções dinamicamente
+Uso: {% include 'blog/sections/section_renderer.html' with section=section_obj %}
+{% endcomment %}
+
+{% if section.section_type == 'hero' %}
+    {% include 'blog/sections/hero.html' %}
+{% elif section.section_type == 'text' %}
+    {% include 'blog/sections/text.html' %}
+{% elif section.section_type == 'text_image' %}
+    {% include 'blog/sections/text_image.html' %}
+{% elif section.section_type == 'cta' %}
+    {% include 'blog/sections/cta.html' %}
+{% elif section.section_type == 'features' %}
+    {% include 'blog/sections/features.html' %}
+{% elif section.section_type == 'banner_carousel' %}
+    {% include 'blog/sections/banner_carousel.html' %}
+{% elif section.section_type == 'html' %}
+    {% include 'blog/sections/html.html' %}
+{% elif section.section_type == 'cards' or section.section_type == 'testimonials' or section.section_type == 'image_gallery' %}
+    {# Para estes tipos, use o template genérico de features por enquanto #}
+    {% include 'blog/sections/features.html' %}
+{% else %}
+    <!-- Seção não reconhecida: {{ section.section_type }} -->
+    <section style="padding: 4rem 0; background: #f5f5f5;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <h2>{{ section.title }}</h2>
+            <div>{{ section.content|safe }}</div>
+        </div>
+    </section>
+{% endif %}

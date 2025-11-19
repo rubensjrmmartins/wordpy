@@ -1,0 +1,133 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.meta_title }} - {{ site_settings.site_name }}{% endblock %}
+
+{% block meta %}
+<meta name="description" content="{{ post.meta_description }}">
+<meta name="keywords" content="{{ post.meta_keywords }}">
+<meta name="author" content="{{ post.author.get_full_name|default:post.author.username }}">
+{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+    <article style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+        <h1 style="margin-bottom: 1rem; color: #2c3e50;">{{ post.title }}</h1>
+
+        <div style="color: #7f8c8d; font-size: 0.9rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #eee;">
+            <span>Por {{ post.author.get_full_name|default:post.author.username }}</span>
+            <span> • </span>
+            <span>{{ post.published_at|date:"d/m/Y H:i" }}</span>
+            {% if post.category %}
+            <span> • </span>
+            <span><a href="{% url 'blog:category' post.category.slug %}" style="color: #3498db; text-decoration: none;">{{ post.category.name }}</a></span>
+            {% endif %}
+            <span> • </span>
+            <span>{{ post.views }} visualizações</span>
+        </div>
+
+        {% if post.featured_image %}
+        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" style="width: 100%; max-height: 500px; object-fit: cover; border-radius: 4px; margin-bottom: 2rem;">
+        {% endif %}
+
+        <div style="line-height: 1.8; color: #444;">
+            {{ post.content|safe }}
+        </div>
+
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee;">
+            <strong>Tags: </strong>
+            {% for tag in post.tags.all %}
+            <a href="{% url 'blog:tag' tag.slug %}" style="display: inline-block; background: #ecf0f1; padding: 0.3rem 0.8rem; margin: 0.2rem; border-radius: 20px; color: #2c3e50; text-decoration: none; font-size: 0.9rem;">{{ tag.name }}</a>
+            {% empty %}
+            <span style="color: #7f8c8d;">Nenhuma tag</span>
+            {% endfor %}
+        </div>
+
+        {% if post.allow_comments %}
+        <section style="margin-top: 3rem;">
+            <h2 style="margin-bottom: 1.5rem; color: #2c3e50;">Comentários ({{ comments.count }})</h2>
+
+            <form method="post" style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                {% csrf_token %}
+                {% if not user.is_authenticated %}
+                <div style="margin-bottom: 1rem;">
+                    <input type="text" name="author_name" placeholder="Seu nome" required style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <input type="email" name="author_email" placeholder="Seu e-mail" required style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                {% endif %}
+                <div style="margin-bottom: 1rem;">
+                    <textarea name="content" rows="4" placeholder="Escreva seu comentário..." required style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;"></textarea>
+                </div>
+                <button type="submit" style="padding: 0.8rem 2rem; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem;">Enviar Comentário</button>
+            </form>
+
+            <div>
+                {% for comment in comments %}
+                <div style="background: #f8f9fa; padding: 1.5rem; margin-bottom: 1rem; border-radius: 8px; border-left: 4px solid #3498db;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <strong style="color: #2c3e50;">{{ comment.get_author_name }}</strong>
+                        <span style="color: #7f8c8d; font-size: 0.9rem;">{{ comment.created_at|date:"d/m/Y H:i" }}</span>
+                    </div>
+                    <p style="color: #555;">{{ comment.content }}</p>
+
+                    {% if comment.replies.all %}
+                    <div style="margin-top: 1rem; margin-left: 2rem;">
+                        {% for reply in comment.replies.all %}
+                        {% if reply.is_approved %}
+                        <div style="background: white; padding: 1rem; margin-top: 0.5rem; border-radius: 4px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <strong style="color: #2c3e50; font-size: 0.9rem;">{{ reply.get_author_name }}</strong>
+                                <span style="color: #7f8c8d; font-size: 0.85rem;">{{ reply.created_at|date:"d/m/Y H:i" }}</span>
+                            </div>
+                            <p style="color: #555; font-size: 0.9rem;">{{ reply.content }}</p>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p style="text-align: center; color: #7f8c8d; padding: 2rem;">Nenhum comentário ainda. Seja o primeiro a comentar!</p>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+    </article>
+
+    <aside>
+        <div class="sidebar">
+            <h3>Sobre o Autor</h3>
+            <p><strong>{{ post.author.get_full_name|default:post.author.username }}</strong></p>
+            {% if post.author.email %}
+            <p style="font-size: 0.9rem; color: #7f8c8d;">{{ post.author.email }}</p>
+            {% endif %}
+        </div>
+
+        {% if related_posts %}
+        <div class="sidebar">
+            <h3>Posts Relacionados</h3>
+            <ul>
+                {% for related in related_posts %}
+                <li>
+                    <a href="{% url 'blog:post_detail' related.slug %}">{{ related.title }}</a>
+                    <small style="display: block; color: #7f8c8d; margin-top: 0.3rem;">{{ related.published_at|date:"d/m/Y" }}</small>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="sidebar">
+            <h3>Categorias</h3>
+            <ul>
+                {% for category in categories %}
+                <li>
+                    <a href="{% url 'blog:category' category.slug %}">{{ category.name }} ({{ category.post_count }})</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </aside>
+</div>
+{% endblock %}

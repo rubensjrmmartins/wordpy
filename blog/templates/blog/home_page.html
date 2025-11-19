@@ -1,0 +1,134 @@
+{% extends 'blog/base.html' %}
+{% load blog_tags %}
+
+{% block title %}{{ page.meta_title|default:page.title }} - {{ site_settings.site_name }}{% endblock %}
+
+{% block meta %}
+<meta name="description" content="{{ page.meta_description|default:site_settings.site_description }}">
+{% endblock %}
+
+{% block content %}
+<!-- Seções da página home -->
+{% if page_sections %}
+<div class="home-sections">
+    {% for page_section in page_sections %}
+        {% include 'blog/sections/section_renderer.html' with section=page_section.section %}
+    {% endfor %}
+</div>
+{% else %}
+<!-- Fallback: se não há seções, mostra conteúdo básico -->
+<div style="max-width: 1200px; margin: 0 auto; padding: 3rem 0;">
+    {% if page.featured_image %}
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <img src="{{ page.featured_image.url }}" alt="{{ page.title }}" style="max-width: 100%; border-radius: 8px;">
+    </div>
+    {% endif %}
+
+    <article style="background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+        <h1 style="margin-bottom: 2rem; color: #2c3e50; text-align: center;">{{ page.title }}</h1>
+
+        <div style="line-height: 1.8; color: #444;">
+            {{ page.content|safe }}
+        </div>
+    </article>
+</div>
+{% endif %}
+
+<!-- Seção de Posts Recentes -->
+{% if page_sections %}
+{% get_recent_posts 3 as recent_posts %}
+<section style="background: #f5f5f5; padding: 4rem 0; margin-top: 2rem;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <h2 style="margin-bottom: 1rem; color: #2c3e50; font-size: 2.5rem;">Últimas Postagens do Blog</h2>
+            <p style="color: #7f8c8d; font-size: 1.1rem;">Confira nossos artigos mais recentes</p>
+        </div>
+
+        {% if recent_posts %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+            {% for post in recent_posts %}
+            <article style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column;">
+                {% if post.featured_image %}
+                <a href="{{ post.get_absolute_url }}" style="display: block; overflow: hidden; height: 200px;">
+                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;">
+                </a>
+                {% else %}
+                <div style="height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+                    <span style="font-size: 3rem; opacity: 0.3;">📝</span>
+                </div>
+                {% endif %}
+
+                <div style="padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column;">
+                    <div style="margin-bottom: 1rem;">
+                        {% if post.category %}
+                        <a href="{% url 'blog:category' post.category.slug %}" style="display: inline-block; padding: 0.25rem 0.75rem; background: #3498db; color: white; text-decoration: none; border-radius: 4px; font-size: 0.8rem; margin-bottom: 0.5rem;">
+                            {{ post.category.name }}
+                        </a>
+                        {% endif %}
+                        <div style="font-size: 0.85rem; color: #95a5a6; margin-top: 0.5rem;">
+                            <span>{{ post.published_at|date:"d/m/Y" }}</span>
+                            <span style="margin: 0 0.5rem;">•</span>
+                            <span>{{ post.author.get_full_name|default:post.author.username }}</span>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-bottom: 0.75rem; font-size: 1.3rem; line-height: 1.4;">
+                        <a href="{{ post.get_absolute_url }}" style="color: #2c3e50; text-decoration: none;">
+                            {{ post.title }}
+                        </a>
+                    </h3>
+
+                    <p style="color: #7f8c8d; line-height: 1.6; margin-bottom: 1rem; flex-grow: 1;">
+                        {{ post.excerpt|default:post.content|striptags|truncate_words:20 }}
+                    </p>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid #ecf0f1;">
+                        <a href="{{ post.get_absolute_url }}" style="color: #3498db; text-decoration: none; font-weight: 500; display: flex; align-items: center;">
+                            Ler mais →
+                        </a>
+                        <span style="color: #95a5a6; font-size: 0.85rem;">
+                            👁 {{ post.views }} visualizações
+                        </span>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+
+        <div style="text-align: center;">
+            <a href="{% url 'blog:post_list' %}" style="display: inline-block; padding: 1rem 2.5rem; background: #3498db; color: white; text-decoration: none; border-radius: 8px; font-weight: 500; transition: background 0.3s; box-shadow: 0 2px 5px rgba(52,152,219,0.3);">
+                Ver Todas as Postagens
+            </a>
+        </div>
+        {% else %}
+        <p style="text-align: center; color: #95a5a6; font-size: 1.1rem;">Nenhuma postagem publicada ainda.</p>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+article:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15) !important;
+}
+
+article:hover img {
+    transform: scale(1.05);
+}
+
+article h3 a:hover {
+    color: #3498db;
+}
+
+article a[href*="post/"]:hover {
+    color: #2980b9;
+}
+
+@media (max-width: 768px) {
+    section > div > div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+{% endif %}
+{% endblock %}

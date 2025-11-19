@@ -1,0 +1,251 @@
+<!-- Seção: Carrossel de Banners -->
+<section class="banner-carousel-section" style="background-color: {{ section.background_color }}; position: relative; overflow: hidden;">
+    <div class="carousel-container" id="carousel-{{ section.id }}" style="position: relative; max-width: 100%; margin: 0 auto;">
+
+        <!-- Slides do Carrossel -->
+        <div class="carousel-slides" style="position: relative; width: 100%; height: 500px; overflow: hidden;">
+            <!-- Slide Principal (se houver imagem/conteúdo principal) -->
+            {% if section.image or section.title or section.content %}
+            <div class="carousel-slide active" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 1; transition: opacity 0.5s ease-in-out;">
+                <div style="position: relative; width: 100%; height: 100%;">
+                    {% if section.image %}
+                    <img src="{{ section.image.url }}" alt="{{ section.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% else %}
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                    {% endif %}
+
+                    <!-- Overlay com Conteúdo -->
+                    {% if section.title or section.content or section.button_text %}
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center;">
+                        <div style="text-align: center; color: white; max-width: 800px; padding: 2rem;">
+                            {% if section.subtitle %}
+                            <p style="font-size: 1.2rem; margin-bottom: 1rem; opacity: 0.9;">{{ section.subtitle }}</p>
+                            {% endif %}
+
+                            {% if section.title %}
+                            <h2 style="font-size: 3rem; font-weight: bold; margin-bottom: 1.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">{{ section.title }}</h2>
+                            {% endif %}
+
+                            {% if section.content %}
+                            <div style="font-size: 1.2rem; margin-bottom: 2rem; line-height: 1.6;">
+                                {{ section.content|safe }}
+                            </div>
+                            {% endif %}
+
+                            {% if section.button_text and section.button_link %}
+                            <a href="{{ section.button_link }}" style="display: inline-block; padding: 1rem 2.5rem; background: white; color: #333; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.3s;">
+                                {{ section.button_text }}
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Slides Adicionais (via custom_html se necessário, ou você pode criar um modelo relacionado) -->
+            <!-- Exemplo: 3 slides automáticos com imagens de exemplo -->
+            <div class="carousel-slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.5s ease-in-out;">
+                <div style="position: relative; width: 100%; height: 100%;">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
+                        <div style="text-align: center; color: white; max-width: 800px; padding: 2rem;">
+                            <h2 style="font-size: 3rem; font-weight: bold; margin-bottom: 1.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Banner 2</h2>
+                            <p style="font-size: 1.2rem; margin-bottom: 2rem;">Conteúdo do segundo banner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-slide" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.5s ease-in-out;">
+                <div style="position: relative; width: 100%; height: 100%;">
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
+                        <div style="text-align: center; color: white; max-width: 800px; padding: 2rem;">
+                            <h2 style="font-size: 3rem; font-weight: bold; margin-bottom: 1.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Banner 3</h2>
+                            <p style="font-size: 1.2rem; margin-bottom: 2rem;">Conteúdo do terceiro banner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controles de Navegação -->
+        <button class="carousel-prev" onclick="moveSlide({{ section.id }}, -1)" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.8); border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; z-index: 10; transition: background 0.3s;">
+            ‹
+        </button>
+
+        <button class="carousel-next" onclick="moveSlide({{ section.id }}, 1)" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.8); border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; z-index: 10; transition: background 0.3s;">
+            ›
+        </button>
+
+        <!-- Indicadores (dots) -->
+        <div class="carousel-indicators" style="position: absolute; bottom: 20px; left: 0; right: 0; display: flex; justify-content: center; gap: 10px; z-index: 10;">
+            <span class="indicator active" onclick="goToSlide({{ section.id }}, 0)" style="width: 12px; height: 12px; background: white; border-radius: 50%; cursor: pointer; transition: transform 0.3s;"></span>
+            <span class="indicator" onclick="goToSlide({{ section.id }}, 1)" style="width: 12px; height: 12px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; transition: transform 0.3s;"></span>
+            <span class="indicator" onclick="goToSlide({{ section.id }}, 2)" style="width: 12px; height: 12px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; transition: transform 0.3s;"></span>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Estilos do Carrossel */
+.carousel-prev:hover,
+.carousel-next:hover {
+    background: rgba(255,255,255,1);
+}
+
+.indicator.active {
+    transform: scale(1.3);
+}
+
+.indicator:hover {
+    background: rgba(255,255,255,0.8) !important;
+}
+
+@media (max-width: 768px) {
+    .carousel-slides {
+        height: 400px !important;
+    }
+
+    .carousel-slide h2 {
+        font-size: 2rem !important;
+    }
+
+    .carousel-slide p,
+    .carousel-slide div {
+        font-size: 1rem !important;
+    }
+
+    .carousel-prev,
+    .carousel-next {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1.2rem !important;
+    }
+}
+</style>
+
+<script>
+// Gerenciador de Carrosséis
+const carousels = {};
+
+// Inicializar carrossel
+function initCarousel(carouselId) {
+    if (!carousels[carouselId]) {
+        carousels[carouselId] = {
+            currentSlide: 0,
+            totalSlides: 3, // Ajuste conforme necessário
+            autoplayInterval: null
+        };
+
+        // Iniciar autoplay
+        startAutoplay(carouselId);
+    }
+}
+
+// Mover slide
+function moveSlide(carouselId, direction) {
+    const carousel = carousels[carouselId];
+    if (!carousel) {
+        initCarousel(carouselId);
+        return;
+    }
+
+    // Parar autoplay temporariamente
+    stopAutoplay(carouselId);
+
+    carousel.currentSlide += direction;
+
+    // Loop infinito
+    if (carousel.currentSlide >= carousel.totalSlides) {
+        carousel.currentSlide = 0;
+    } else if (carousel.currentSlide < 0) {
+        carousel.currentSlide = carousel.totalSlides - 1;
+    }
+
+    updateSlides(carouselId);
+
+    // Reiniciar autoplay após 5 segundos
+    setTimeout(() => startAutoplay(carouselId), 5000);
+}
+
+// Ir para slide específico
+function goToSlide(carouselId, slideIndex) {
+    const carousel = carousels[carouselId];
+    if (!carousel) {
+        initCarousel(carouselId);
+        return;
+    }
+
+    stopAutoplay(carouselId);
+    carousel.currentSlide = slideIndex;
+    updateSlides(carouselId);
+    setTimeout(() => startAutoplay(carouselId), 5000);
+}
+
+// Atualizar slides
+function updateSlides(carouselId) {
+    const container = document.getElementById('carousel-' + carouselId);
+    if (!container) return;
+
+    const carousel = carousels[carouselId];
+    const slides = container.querySelectorAll('.carousel-slide');
+    const indicators = container.querySelectorAll('.indicator');
+
+    // Atualizar slides
+    slides.forEach((slide, index) => {
+        if (index === carousel.currentSlide) {
+            slide.style.opacity = '1';
+            slide.style.zIndex = '1';
+        } else {
+            slide.style.opacity = '0';
+            slide.style.zIndex = '0';
+        }
+    });
+
+    // Atualizar indicadores
+    indicators.forEach((indicator, index) => {
+        if (index === carousel.currentSlide) {
+            indicator.classList.add('active');
+            indicator.style.background = 'white';
+            indicator.style.transform = 'scale(1.3)';
+        } else {
+            indicator.classList.remove('active');
+            indicator.style.background = 'rgba(255,255,255,0.5)';
+            indicator.style.transform = 'scale(1)';
+        }
+    });
+}
+
+// Iniciar autoplay
+function startAutoplay(carouselId) {
+    const carousel = carousels[carouselId];
+    if (!carousel) return;
+
+    stopAutoplay(carouselId); // Limpar intervalo anterior
+
+    carousel.autoplayInterval = setInterval(() => {
+        moveSlide(carouselId, 1);
+    }, 5000); // Trocar a cada 5 segundos
+}
+
+// Parar autoplay
+function stopAutoplay(carouselId) {
+    const carousel = carousels[carouselId];
+    if (carousel && carousel.autoplayInterval) {
+        clearInterval(carousel.autoplayInterval);
+        carousel.autoplayInterval = null;
+    }
+}
+
+// Inicializar todos os carrosséis ao carregar a página
+document.addEventListener('DOMContentLoaded', function() {
+    const allCarousels = document.querySelectorAll('[id^="carousel-"]');
+    allCarousels.forEach(container => {
+        const carouselId = container.id.replace('carousel-', '');
+        initCarousel(parseInt(carouselId));
+    });
+});
+</script>

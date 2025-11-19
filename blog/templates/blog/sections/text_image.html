@@ -1,0 +1,73 @@
+<!-- Text with Image Section -->
+<section class="section-text-image {{ section.custom_css_class }}" style="
+    {% if section.background_color == 'white' %}background: #fff;{% endif %}
+    {% if section.background_color == 'light' %}background: #f5f5f5;{% endif %}
+    {% if section.background_color == 'dark' %}background: #2c3e50; color: white;{% endif %}
+    {% if section.background_color == 'primary' %}background: #3498db; color: white;{% endif %}
+    {% if section.background_color == 'secondary' %}background: #34495e; color: white;{% endif %}
+    padding: 4rem 0;">
+
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
+            {% if section.image_position == 'left' %}
+            <!-- Imagem à esquerda -->
+            <div>
+                {% if section.image %}
+                <img src="{{ section.image.url }}" alt="{{ section.title }}" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                {% endif %}
+            </div>
+            <div>
+                {% if section.title %}
+                <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">{{ section.title }}</h2>
+                {% endif %}
+                {% if section.subtitle %}
+                <p style="font-size: 1.2rem; margin-bottom: 1.5rem; opacity: 0.8;">{{ section.subtitle }}</p>
+                {% endif %}
+                {% if section.content %}
+                <div style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem;">
+                    {{ section.content|safe }}
+                </div>
+                {% endif %}
+                {% if section.button_text %}
+                <a href="{{ section.button_link|default:'#' }}" style="display: inline-block; padding: 0.8rem 2rem; background: #3498db; color: white; text-decoration: none; border-radius: 4px; font-weight: 500;">
+                    {{ section.button_text }}
+                </a>
+                {% endif %}
+            </div>
+            {% else %}
+            <!-- Texto à esquerda, imagem à direita -->
+            <div>
+                {% if section.title %}
+                <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">{{ section.title }}</h2>
+                {% endif %}
+                {% if section.subtitle %}
+                <p style="font-size: 1.2rem; margin-bottom: 1.5rem; opacity: 0.8;">{{ section.subtitle }}</p>
+                {% endif %}
+                {% if section.content %}
+                <div style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem;">
+                    {{ section.content|safe }}
+                </div>
+                {% endif %}
+                {% if section.button_text %}
+                <a href="{{ section.button_link|default:'#' }}" style="display: inline-block; padding: 0.8rem 2rem; background: #3498db; color: white; text-decoration: none; border-radius: 4px; font-weight: 500;">
+                    {{ section.button_text }}
+                </a>
+                {% endif %}
+            </div>
+            <div>
+                {% if section.image %}
+                <img src="{{ section.image.url }}" alt="{{ section.title }}" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<style>
+    @media (max-width: 768px) {
+        .section-text-image .container > div {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>

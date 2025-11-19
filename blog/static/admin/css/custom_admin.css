@@ -1,0 +1,313 @@
+/* ========================================================================
+   WORDPY CMS - Custom Admin Styles
+   ======================================================================== */
+
+/* Melhorias gerais */
+.main-header .navbar-nav .nav-link {
+    padding: 0.5rem 1rem !important;
+}
+
+/* Cards mais elegantes */
+.card {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08) !important;
+}
+
+.card-header {
+    border-bottom: 2px solid #f4f4f4 !important;
+    font-weight: 600 !important;
+}
+
+/* Botões mais modernos */
+.btn {
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    padding: 0.5rem 1.2rem !important;
+}
+
+.btn-primary {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3 !important;
+    border-color: #0056b3 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,123,255,0.3) !important;
+}
+
+.btn-success {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+}
+
+.btn-success:hover {
+    background-color: #218838 !important;
+    border-color: #218838 !important;
+}
+
+/* Tabelas mais limpas */
+.table {
+    font-size: 14px;
+}
+
+.table thead th {
+    border-bottom: 2px solid #dee2e6 !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #495057;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0,0,0,0.02) !important;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0,123,255,0.05) !important;
+}
+
+/* Forms melhorados */
+.form-control {
+    border-radius: 6px !important;
+    border: 1px solid #ced4da !important;
+    padding: 0.6rem 0.75rem !important;
+}
+
+.form-control:focus {
+    border-color: #80bdff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.15) !important;
+}
+
+select.form-control {
+    cursor: pointer;
+}
+
+/* Labels */
+label {
+    font-weight: 500 !important;
+    color: #495057 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* Alerts melhorados */
+.alert {
+    border-radius: 6px !important;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    border-left-color: #28a745 !important;
+    background-color: #d4edda !important;
+}
+
+.alert-warning {
+    border-left-color: #ffc107 !important;
+    background-color: #fff3cd !important;
+}
+
+.alert-danger {
+    border-left-color: #dc3545 !important;
+    background-color: #f8d7da !important;
+}
+
+.alert-info {
+    border-left-color: #17a2b8 !important;
+    background-color: #d1ecf1 !important;
+}
+
+/* Badges modernos */
+.badge {
+    border-radius: 4px !important;
+    padding: 0.35em 0.65em !important;
+    font-weight: 500 !important;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 20px;
+}
+
+.page-link {
+    border-radius: 6px !important;
+    margin: 0 2px;
+    color: #007bff !important;
+}
+
+.page-link:hover {
+    background-color: #e9ecef !important;
+    border-color: #dee2e6 !important;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}
+
+/* Sidebar melhorada */
+.nav-sidebar .nav-link {
+    border-radius: 4px !important;
+    margin: 2px 8px !important;
+}
+
+.nav-sidebar .nav-link:hover {
+    background-color: rgba(255,255,255,0.1) !important;
+}
+
+.nav-sidebar .nav-link.active {
+    background-color: rgba(255,255,255,0.2) !important;
+}
+
+/* Icons com animação */
+.nav-icon {
+    transition: transform 0.2s ease;
+}
+
+.nav-link:hover .nav-icon {
+    transform: scale(1.1);
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background-color: transparent !important;
+    padding: 0.5rem 0 !important;
+}
+
+.breadcrumb-item a {
+    color: #007bff !important;
+    text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+
+/* Content wrapper */
+.content-wrapper {
+    background-color: #f4f6f9 !important;
+}
+
+/* Widget melhorado */
+.info-box {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08) !important;
+}
+
+.info-box-icon {
+    border-radius: 8px 0 0 8px !important;
+}
+
+/* Small box */
+.small-box {
+    border-radius: 8px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.small-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
+    transition: all 0.3s ease;
+}
+
+/* Login page */
+.login-page {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.login-box {
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2) !important;
+    border-radius: 10px !important;
+}
+
+.login-logo a {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+.login-card-body {
+    border-radius: 10px !important;
+}
+
+/* Responsive melhorias */
+@media (max-width: 768px) {
+    .stat-card {
+        margin-bottom: 15px;
+    }
+
+    .stat-card-value {
+        font-size: 24px !important;
+    }
+}
+
+/* Animações suaves */
+.card,
+.btn,
+.form-control,
+.nav-link {
+    transition: all 0.3s ease;
+}
+
+/* Status indicators */
+.status-active {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.status-inactive {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.status-pending {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Loading indicator */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0,0,0,.1);
+    border-radius: 50%;
+    border-top-color: #007bff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Print styles */
+@media print {
+    .main-sidebar,
+    .main-header,
+    .content-header {
+        display: none !important;
+    }
+
+    .content-wrapper {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}

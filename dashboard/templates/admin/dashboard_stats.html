@@ -1,0 +1,448 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Dashboard - WordPy CMS{% endblock %}
+
+{% block extrastyle %}
+<style>
+    .dashboard-container {
+        padding: 20px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .stat-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .stat-card-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+        margin: 0;
+    }
+
+    .stat-card-icon {
+        font-size: 24px;
+        opacity: 0.3;
+    }
+
+    .stat-card-value {
+        font-size: 32px;
+        font-weight: bold;
+        margin: 0;
+        color: #2c3e50;
+    }
+
+    .stat-card-label {
+        font-size: 12px;
+        color: #95a5a6;
+        margin-top: 5px;
+    }
+
+    .stat-card-primary { border-left: 4px solid #007bff; }
+    .stat-card-success { border-left: 4px solid #28a745; }
+    .stat-card-warning { border-left: 4px solid #ffc107; }
+    .stat-card-danger { border-left: 4px solid #dc3545; }
+    .stat-card-info { border-left: 4px solid #17a2b8; }
+    .stat-card-purple { border-left: 4px solid #6f42c1; }
+
+    .icon-primary { color: #007bff; }
+    .icon-success { color: #28a745; }
+    .icon-warning { color: #ffc107; }
+    .icon-danger { color: #dc3545; }
+    .icon-info { color: #17a2b8; }
+    .icon-purple { color: #6f42c1; }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #2c3e50;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 10px;
+    }
+
+    .list-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .list-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .list-item:last-child {
+        border-bottom: none;
+    }
+
+    .list-item-title {
+        font-weight: 500;
+        color: #2c3e50;
+        margin-bottom: 4px;
+    }
+
+    .list-item-meta {
+        font-size: 12px;
+        color: #95a5a6;
+    }
+
+    .badge-custom {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1 style="margin-bottom: 30px; color: #2c3e50;">
+        <i class="fas fa-chart-line"></i> Dashboard de Estatísticas
+    </h1>
+
+    <!-- Seção: Acesso Rápido -->
+    <h2 class="section-title"><i class="fas fa-bolt"></i> Acesso Rápido</h2>
+    <div class="row" style="margin-bottom: 30px;">
+        <div class="col-md-3">
+            <a href="{% url 'admin:blog_sitesettings_changelist' %}" style="text-decoration: none;">
+                <div class="stat-card stat-card-primary" style="cursor: pointer; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+                    <div class="stat-card-header">
+                        <h3 class="stat-card-title" style="color: white;">Configurações do Site</h3>
+                        <i class="fas fa-cogs stat-card-icon" style="color: rgba(255,255,255,0.3);"></i>
+                    </div>
+                    <p class="stat-card-label" style="color: rgba(255,255,255,0.9); margin-top: 10px;">
+                        Editar nome, logo, redes sociais, tema
+                    </p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'admin:blog_post_add' %}" style="text-decoration: none;">
+                <div class="stat-card stat-card-success" style="cursor: pointer;">
+                    <div class="stat-card-header">
+                        <h3 class="stat-card-title">Criar Novo Post</h3>
+                        <i class="fas fa-plus-circle stat-card-icon icon-success"></i>
+                    </div>
+                    <p class="stat-card-label" style="margin-top: 10px;">
+                        Adicionar conteúdo ao blog
+                    </p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'admin:ecommerce_product_add' %}" style="text-decoration: none;">
+                <div class="stat-card stat-card-warning" style="cursor: pointer;">
+                    <div class="stat-card-header">
+                        <h3 class="stat-card-title">Adicionar Produto</h3>
+                        <i class="fas fa-box stat-card-icon icon-warning"></i>
+                    </div>
+                    <p class="stat-card-label" style="margin-top: 10px;">
+                        Cadastrar novo produto
+                    </p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'admin:modules_module_changelist' %}" style="text-decoration: none;">
+                <div class="stat-card stat-card-purple" style="cursor: pointer;">
+                    <div class="stat-card-header">
+                        <h3 class="stat-card-title">Gerenciar Módulos</h3>
+                        <i class="fas fa-puzzle-piece stat-card-icon icon-purple"></i>
+                    </div>
+                    <p class="stat-card-label" style="margin-top: 10px;">
+                        Ativar/desativar recursos
+                    </p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Seção: Visão Geral -->
+    <h2 class="section-title"><i class="fas fa-tachometer-alt"></i> Visão Geral</h2>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="stat-card stat-card-primary">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Posts</h3>
+                    <i class="fas fa-newspaper stat-card-icon icon-primary"></i>
+                </div>
+                <p class="stat-card-value">{{ published_posts }}</p>
+                <p class="stat-card-label">{{ draft_posts }} rascunhos</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-card-success">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Produtos</h3>
+                    <i class="fas fa-box stat-card-icon icon-success"></i>
+                </div>
+                <p class="stat-card-value">{{ active_products }}</p>
+                <p class="stat-card-label">{{ out_of_stock }} sem estoque</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-card-warning">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Pedidos</h3>
+                    <i class="fas fa-receipt stat-card-icon icon-warning"></i>
+                </div>
+                <p class="stat-card-value">{{ pending_orders }}</p>
+                <p class="stat-card-label">pendentes</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-card-info">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Mensagens</h3>
+                    <i class="fas fa-envelope stat-card-icon icon-info"></i>
+                </div>
+                <p class="stat-card-value">{{ unread_messages }}</p>
+                <p class="stat-card-label">não lidas</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção: Blog -->
+    <h2 class="section-title" style="margin-top: 40px;">
+        <i class="fas fa-blog"></i> Blog
+    </h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="stat-card stat-card-primary">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Total de Posts</h3>
+                    <i class="fas fa-newspaper stat-card-icon icon-primary"></i>
+                </div>
+                <p class="stat-card-value">{{ total_posts }}</p>
+                <p class="stat-card-label">Publicados: {{ published_posts }} | Rascunhos: {{ draft_posts }}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card stat-card-success">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Comentários</h3>
+                    <i class="fas fa-comments stat-card-icon icon-success"></i>
+                </div>
+                <p class="stat-card-value">{{ total_comments }}</p>
+                <p class="stat-card-label">{{ pending_comments }} pendentes de aprovação</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card stat-card-info">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Categorias</h3>
+                    <i class="fas fa-folder stat-card-icon icon-info"></i>
+                </div>
+                <p class="stat-card-value">{{ total_categories }}</p>
+                <p class="stat-card-label">organizando o conteúdo</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção: E-commerce -->
+    <h2 class="section-title" style="margin-top: 40px;">
+        <i class="fas fa-shopping-cart"></i> E-commerce
+    </h2>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="stat-card stat-card-success">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Produtos</h3>
+                    <i class="fas fa-box stat-card-icon icon-success"></i>
+                </div>
+                <p class="stat-card-value">{{ total_products }}</p>
+                <p class="stat-card-label">{{ active_products }} ativos</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-card-warning">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Pedidos</h3>
+                    <i class="fas fa-receipt stat-card-icon icon-warning"></i>
+                </div>
+                <p class="stat-card-value">{{ total_orders }}</p>
+                <p class="stat-card-label">{{ completed_orders }} concluídos</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-card-danger">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Sem Estoque</h3>
+                    <i class="fas fa-exclamation-triangle stat-card-icon icon-danger"></i>
+                </div>
+                <p class="stat-card-value">{{ out_of_stock }}</p>
+                <p class="stat-card-label">produtos esgotados</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-card-success">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Receita</h3>
+                    <i class="fas fa-dollar-sign stat-card-icon icon-success"></i>
+                </div>
+                <p class="stat-card-value">R$ {{ total_revenue|floatformat:2 }}</p>
+                <p class="stat-card-label">pedidos pagos</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção: Usuários e Sistema -->
+    <h2 class="section-title" style="margin-top: 40px;">
+        <i class="fas fa-users"></i> Usuários e Sistema
+    </h2>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="stat-card stat-card-primary">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Usuários</h3>
+                    <i class="fas fa-users stat-card-icon icon-primary"></i>
+                </div>
+                <p class="stat-card-value">{{ total_users }}</p>
+                <p class="stat-card-label">{{ active_users }} ativos</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-card-info">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Novos Usuários</h3>
+                    <i class="fas fa-user-plus stat-card-icon icon-info"></i>
+                </div>
+                <p class="stat-card-value">{{ new_users }}</p>
+                <p class="stat-card-label">últimos 30 dias</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-card-purple">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Módulos</h3>
+                    <i class="fas fa-puzzle-piece stat-card-icon icon-purple"></i>
+                </div>
+                <p class="stat-card-value">{{ active_modules }}</p>
+                <p class="stat-card-label">de {{ total_modules }} disponíveis</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card stat-card-warning">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Staff</h3>
+                    <i class="fas fa-user-shield stat-card-icon icon-warning"></i>
+                </div>
+                <p class="stat-card-value">{{ staff_users }}</p>
+                <p class="stat-card-label">membros da equipe</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção: Atividade Recente -->
+    <h2 class="section-title" style="margin-top: 40px;">
+        <i class="fas fa-clock"></i> Atividade Recente (7 dias)
+    </h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="stat-card stat-card-primary">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Novos Posts</h3>
+                    <i class="fas fa-plus-circle stat-card-icon icon-primary"></i>
+                </div>
+                <p class="stat-card-value">{{ new_posts_week }}</p>
+                <p class="stat-card-label">nesta semana</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card stat-card-success">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Novos Pedidos</h3>
+                    <i class="fas fa-shopping-bag stat-card-icon icon-success"></i>
+                </div>
+                <p class="stat-card-value">{{ new_orders_week }}</p>
+                <p class="stat-card-label">nesta semana</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card stat-card-info">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Novas Mensagens</h3>
+                    <i class="fas fa-comment-dots stat-card-icon icon-info"></i>
+                </div>
+                <p class="stat-card-value">{{ new_messages_week }}</p>
+                <p class="stat-card-label">nesta semana</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção: Listas -->
+    <div class="row" style="margin-top: 40px;">
+        <!-- Posts Mais Populares -->
+        <div class="col-md-6">
+            <h2 class="section-title"><i class="fas fa-fire"></i> Posts Mais Populares</h2>
+            <div class="list-card">
+                {% if popular_posts %}
+                    {% for post in popular_posts %}
+                    <div class="list-item">
+                        <div class="list-item-title">
+                            <a href="{% url 'admin:blog_post_change' post.id %}">{{ post.title }}</a>
+                        </div>
+                        <div class="list-item-meta">
+                            <i class="fas fa-eye"></i> {{ post.views }} visualizações
+                            <span class="badge-custom" style="background: #e3f2fd; color: #1976d2; margin-left: 10px;">
+                                {{ post.category.name|default:"Sem categoria" }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color: #95a5a6; text-align: center; padding: 20px;">Nenhum post encontrado</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Pedidos Recentes -->
+        <div class="col-md-6">
+            <h2 class="section-title"><i class="fas fa-clock"></i> Pedidos Recentes</h2>
+            <div class="list-card">
+                {% if recent_orders %}
+                    {% for order in recent_orders %}
+                    <div class="list-item">
+                        <div class="list-item-title">
+                            <a href="{% url 'admin:ecommerce_order_change' order.id %}">Pedido #{{ order.order_number }}</a>
+                        </div>
+                        <div class="list-item-meta">
+                            <i class="fas fa-user"></i> {{ order.shipping_name }}
+                            <span style="margin-left: 15px;">
+                                <i class="fas fa-dollar-sign"></i> R$ {{ order.total|floatformat:2 }}
+                            </span>
+                            <span class="badge-custom" style="background: {% if order.status == 'pending' %}#fff3cd{% elif order.status == 'delivered' %}#d4edda{% else %}#d1ecf1{% endif %}; color: {% if order.status == 'pending' %}#856404{% elif order.status == 'delivered' %}#155724{% else %}#0c5460{% endif %}; margin-left: 10px;">
+                                {{ order.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color: #95a5a6; text-align: center; padding: 20px;">Nenhum pedido encontrado</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

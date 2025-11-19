@@ -1,0 +1,31 @@
+<!-- Features Section -->
+<section class="section-features {{ section.custom_css_class }}" style="
+    {% if section.background_color == 'white' %}background: #fff;{% endif %}
+    {% if section.background_color == 'light' %}background: #f5f5f5;{% endif %}
+    {% if section.background_color == 'dark' %}background: #2c3e50; color: white;{% endif %}
+    {% if section.background_color == 'primary' %}background: #3498db; color: white;{% endif %}
+    {% if section.background_color == 'secondary' %}background: #34495e; color: white;{% endif %}
+    padding: 4rem 0;">
+
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        {% if section.title %}
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem; text-align: center;">{{ section.title }}</h2>
+        {% endif %}
+
+        {% if section.subtitle %}
+        <p style="font-size: 1.3rem; margin-bottom: 3rem; text-align: center; opacity: 0.8;">{{ section.subtitle }}</p>
+        {% endif %}
+
+        {% if section.content %}
+        <div style="font-size: 1.1rem; line-height: 1.8; text-align: center; max-width: 900px; margin: 0 auto 3rem;">
+            {{ section.content|safe }}
+        </div>
+        {% endif %}
+
+        {% if section.image %}
+        <div style="text-align: center; margin-top: 2rem;">
+            <img src="{{ section.image.url }}" alt="{{ section.title }}" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        </div>
+        {% endif %}
+    </div>
+</section>

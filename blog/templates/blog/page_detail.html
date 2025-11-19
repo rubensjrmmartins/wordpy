@@ -1,0 +1,39 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ page.meta_title }} - {{ site_settings.site_name }}{% endblock %}
+
+{% block meta %}
+<meta name="description" content="{{ page.meta_description }}">
+{% endblock %}
+
+{% block content %}
+<!-- Conteúdo principal da página (se houver) -->
+{% if page.content or page.featured_image %}
+<article style="background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); max-width: 900px; margin: 0 auto; margin-bottom: 3rem;">
+    <h1 style="margin-bottom: 2rem; color: #2c3e50;">{{ page.title }}</h1>
+
+    {% if page.featured_image %}
+    <img src="{{ page.featured_image.url }}" alt="{{ page.title }}" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 4px; margin-bottom: 2rem;">
+    {% endif %}
+
+    <div style="line-height: 1.8; color: #444;">
+        {{ page.content|safe }}
+    </div>
+</article>
+{% endif %}
+
+<!-- Seções da página -->
+{% if page_sections %}
+<div class="page-sections" style="margin-top: {% if not page.content %}0{% else %}2rem{% endif %};">
+    {% for page_section in page_sections %}
+        {% include 'blog/sections/section_renderer.html' with section=page_section.section %}
+    {% endfor %}
+</div>
+{% elif not page.content %}
+<!-- Se não há conteúdo nem seções, mostrar apenas o título -->
+<article style="background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); max-width: 900px; margin: 0 auto;">
+    <h1 style="margin-bottom: 2rem; color: #2c3e50;">{{ page.title }}</h1>
+    <p style="color: #7f8c8d;">Esta página ainda não possui conteúdo.</p>
+</article>
+{% endif %}
+{% endblock %}

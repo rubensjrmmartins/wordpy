@@ -1,0 +1,12 @@
+{% extends 'blog/post_list.html' %}
+
+{% block title %}Busca: {{ query }} - {{ site_settings.site_name }}{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem; padding: 2rem; background: white; border-radius: 8px;">
+    <h1 style="color: #2c3e50;">Resultados da busca por: "{{ query }}"</h1>
+    <p style="color: #7f8c8d; margin-top: 0.5rem;">{{ posts|length }} resultado(s) encontrado(s)</p>
+</div>
+
+{{ block.super }}
+{% endblock %}
