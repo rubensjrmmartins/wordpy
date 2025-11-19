@@ -1,0 +1,87 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Minhas Conversas - {{ site_settings.site_name }}{% endblock %}
+
+{% block content %}
+<div class="conversations" style="padding: 3rem 0;">
+    <div class="container" style="max-width: 900px; margin: 0 auto; padding: 0 20px;">
+
+        <h1 style="font-size: 2.5rem; margin-bottom: 2rem; text-align: center;">
+            💬 Minhas Conversas
+        </h1>
+
+        {% if conversations %}
+        <div style="background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden;">
+            {% for conversation in conversations %}
+            <a href="{% url 'messaging:conversation_detail' conversation.id %}"
+               style="display: flex; align-items: center; padding: 1.5rem; border-bottom: 1px solid #eee; text-decoration: none; color: inherit; transition: background 0.2s;">
+
+                <!-- Avatar -->
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold; margin-right: 1rem; flex-shrink: 0;">
+                    {% for participant in conversation.participants.all %}
+                        {% if participant.id != user.id %}
+                            {{ participant.username|slice:":1"|upper }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- Content -->
+                <div style="flex: 1; min-width: 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <h3 style="font-size: 1.1rem; font-weight: 600; color: #2c3e50;">
+                            {% for participant in conversation.participants.all %}
+                                {% if participant.id != user.id %}
+                                    {{ participant.get_full_name|default:participant.username }}
+                                {% endif %}
+                            {% endfor %}
+                        </h3>
+                        {% if conversation.unread_count > 0 %}
+                        <span style="background: #e74c3c; color: white; font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 10px; font-weight: bold;">
+                            {{ conversation.unread_count }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <p style="color: #999; font-size: 0.9rem;">
+                        {% for participant in conversation.participants.all %}
+                            {% if participant.id != user.id %}
+                                @{{ participant.username }}
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                </div>
+
+                <!-- Arrow -->
+                <div style="color: #ccc; margin-left: 1rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 4rem 2rem; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.3;">💬</div>
+            <h2 style="font-size: 1.5rem; color: #999; margin-bottom: 1rem;">
+                Nenhuma conversa ainda
+            </h2>
+            <p style="color: #999; margin-bottom: 2rem;">
+                Suas conversas aparecerão aqui quando você começar a trocar mensagens.
+            </p>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<style>
+.conversations a:hover {
+    background: #f8f9fa !important;
+}
+
+.conversations a:last-child {
+    border-bottom: none !important;
+}
+</style>
+{% endblock %}

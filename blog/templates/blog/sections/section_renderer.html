@@ -15,6 +15,8 @@ Uso: {% include 'blog/sections/section_renderer.html' with section=section_obj %
     {% include 'blog/sections/features.html' %}
 {% elif section.section_type == 'banner_carousel' %}
     {% include 'blog/sections/banner_carousel.html' %}
+{% elif section.section_type == 'products' %}
+    {% include 'blog/sections/products.html' %}
 {% elif section.section_type == 'html' %}
     {% include 'blog/sections/html.html' %}
 {% elif section.section_type == 'cards' or section.section_type == 'testimonials' or section.section_type == 'image_gallery' %}

@@ -1,0 +1,176 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Finalizar Compra - {{ site_settings.site_name }}{% endblock %}
+
+{% block content %}
+<div class="checkout" style="padding: 3rem 0;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+
+        <h1 style="font-size: 2.5rem; margin-bottom: 2rem; text-align: center;">
+            Finalizar Compra
+        </h1>
+
+        <!-- Checkout Steps -->
+        <div style="display: flex; justify-content: center; margin-bottom: 3rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 40px; height: 40px; background: #27ae60; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                    1
+                </div>
+                <span style="font-weight: 600;">Carrinho</span>
+                <span style="color: #999;">→</span>
+                <div style="width: 40px; height: 40px; background: #3498db; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                    2
+                </div>
+                <span style="font-weight: 600; color: #3498db;">Pagamento</span>
+                <span style="color: #999;">→</span>
+                <div style="width: 40px; height: 40px; background: #ddd; color: #999; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                    3
+                </div>
+                <span style="color: #999;">Confirmação</span>
+            </div>
+        </div>
+
+        <form method="post" style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+            {% csrf_token %}
+
+            <!-- Payment and Shipping Info -->
+            <div>
+                <!-- Shipping Address -->
+                <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #eee;">
+                        📦 Endereço de Entrega
+                    </h2>
+                    <p style="color: #666; line-height: 1.8;">
+                        <strong>{{ user.get_full_name|default:user.username }}</strong><br>
+                        {{ user.email }}
+                    </p>
+                    <p style="margin-top: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 5px; color: #666;">
+                        💡 <em>Nota: Funcionalidade de endereços será implementada em breve. Por enquanto, este é um pedido de demonstração.</em>
+                    </p>
+                </div>
+
+                <!-- Payment Method -->
+                <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #eee;">
+                        💳 Forma de Pagamento
+                    </h2>
+
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #ddd; border-radius: 8px; cursor: pointer;">
+                            <input type="radio" name="payment_method" value="credit_card" checked
+                                   style="margin-right: 1rem; width: 20px; height: 20px;">
+                            <span>
+                                <strong>💳 Cartão de Crédito</strong><br>
+                                <small style="color: #666;">Pagamento seguro em até 12x sem juros</small>
+                            </span>
+                        </label>
+
+                        <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #ddd; border-radius: 8px; cursor: pointer;">
+                            <input type="radio" name="payment_method" value="boleto"
+                                   style="margin-right: 1rem; width: 20px; height: 20px;">
+                            <span>
+                                <strong>📄 Boleto Bancário</strong><br>
+                                <small style="color: #666;">À vista com desconto de 5%</small>
+                            </span>
+                        </label>
+
+                        <label style="display: flex; align-items: center; padding: 1rem; border: 2px solid #ddd; border-radius: 8px; cursor: pointer;">
+                            <input type="radio" name="payment_method" value="pix"
+                                   style="margin-right: 1rem; width: 20px; height: 20px;">
+                            <span>
+                                <strong>⚡ PIX</strong><br>
+                                <small style="color: #666;">Aprovação instantânea</small>
+                            </span>
+                        </label>
+                    </div>
+
+                    <p style="margin-top: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 5px; color: #666;">
+                        💡 <em>Nota: Esta é uma demonstração. Nenhum pagamento real será processado.</em>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div>
+                <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 20px;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #eee;">
+                        Resumo do Pedido
+                    </h2>
+
+                    <!-- Cart Items -->
+                    <div style="margin-bottom: 1.5rem; max-height: 300px; overflow-y: auto;">
+                        {% for item in cart_items %}
+                        <div style="display: flex; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #eee;">
+                            {% if item.product.featured_image %}
+                            <img src="{{ item.product.featured_image.url }}"
+                                 alt="{{ item.product.name }}"
+                                 style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
+                            {% else %}
+                            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                                📦
+                            </div>
+                            {% endif %}
+                            <div style="flex: 1;">
+                                <p style="font-size: 0.9rem; margin-bottom: 0.25rem;">{{ item.product.name }}</p>
+                                <p style="font-size: 0.8rem; color: #666;">Qtd: {{ item.quantity }}</p>
+                                <p style="font-size: 0.9rem; font-weight: bold; color: #27ae60;">R$ {{ item.get_total }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Totals -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: #666;">Subtotal:</span>
+                            <span style="font-weight: 600;">R$ {{ cart.get_total }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: #666;">Frete:</span>
+                            <span style="font-weight: 600; color: #27ae60;">Grátis</span>
+                        </div>
+                    </div>
+
+                    <div style="padding-top: 1rem; border-top: 2px solid #eee; margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 1.2rem; font-weight: bold;">Total:</span>
+                            <span style="font-size: 1.8rem; font-weight: bold; color: #27ae60;">
+                                R$ {{ cart.get_total }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                            style="width: 100%; padding: 1rem; background: #27ae60; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 1.1rem; cursor: pointer; margin-bottom: 1rem;">
+                        🔒 Confirmar Pedido
+                    </button>
+
+                    <a href="{% url 'ecommerce:cart_view' %}"
+                       style="display: block; text-align: center; padding: 1rem; background: #f5f5f5; color: #666; text-decoration: none; border-radius: 8px; font-weight: 600;">
+                        Voltar ao Carrinho
+                    </a>
+
+                    <p style="margin-top: 1rem; text-align: center; font-size: 0.8rem; color: #999;">
+                        🔒 Compra 100% segura e protegida
+                    </p>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<style>
+@media (max-width: 768px) {
+    .checkout form {
+        grid-template-columns: 1fr !important;
+    }
+
+    .checkout [style*="display: flex; justify-content: center"] {
+        overflow-x: auto;
+    }
+}
+</style>
+{% endblock %}

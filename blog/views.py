@@ -33,10 +33,13 @@ class HomeView(TemplateView):
 
     def render_custom_home(self, page):
         """Renderiza página customizada como home"""
+        from ecommerce.models import Product
         context = get_site_context()
         context['page'] = page
         context['page_sections'] = page.page_sections.filter(is_active=True).select_related('section').order_by('order')
         context['is_home'] = True
+        # Adicionar produtos para seções de produtos
+        context['products'] = Product.objects.filter(is_active=True).order_by('-created_at')[:15]
         return render(self.request, 'blog/home_page.html', context)
 
     def render_post_list(self):
@@ -204,12 +207,16 @@ class PageDetailView(DetailView):
         return Page.objects.filter(is_published=True)
 
     def get_context_data(self, **kwargs):
+        from ecommerce.models import Product
         context = super().get_context_data(**kwargs)
         context.update(get_site_context())
 
         # Adicionar seções da página
         page = self.get_object()
         context['page_sections'] = page.page_sections.filter(is_active=True).select_related('section').order_by('order')
+
+        # Adicionar produtos para seções de produtos
+        context['products'] = Product.objects.filter(is_active=True).order_by('-created_at')[:15]
 
         return context
 

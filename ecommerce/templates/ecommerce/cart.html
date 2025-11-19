@@ -1,0 +1,151 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Carrinho de Compras - {{ site_settings.site_name }}{% endblock %}
+
+{% block content %}
+<div class="cart" style="padding: 3rem 0;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+
+        <h1 style="font-size: 2.5rem; margin-bottom: 2rem; text-align: center;">
+            🛒 Meu Carrinho
+        </h1>
+
+        {% if cart_items %}
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+
+            <!-- Cart Items -->
+            <div>
+                {% for item in cart_items %}
+                <div style="background: white; padding: 1.5rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: grid; grid-template-columns: 120px 1fr auto; gap: 1.5rem; align-items: center;">
+
+                    <!-- Product Image -->
+                    <a href="{% url 'ecommerce:product_detail' item.product.slug %}">
+                        {% if item.product.featured_image %}
+                        <img src="{{ item.product.featured_image.url }}"
+                             alt="{{ item.product.name }}"
+                             style="width: 120px; height: 120px; object-fit: cover; border-radius: 8px;">
+                        {% else %}
+                        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                            📦
+                        </div>
+                        {% endif %}
+                    </a>
+
+                    <!-- Product Info -->
+                    <div>
+                        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">
+                            <a href="{% url 'ecommerce:product_detail' item.product.slug %}"
+                               style="color: #2c3e50; text-decoration: none;">
+                                {{ item.product.name }}
+                            </a>
+                        </h3>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                            SKU: {{ item.product.sku }}
+                        </p>
+                        <p style="font-size: 1.1rem; font-weight: bold; color: #27ae60;">
+                            R$ {{ item.price }}
+                        </p>
+
+                        <!-- Quantity Update Form -->
+                        <form method="post" action="{% url 'ecommerce:update_cart_item' item.id %}"
+                              style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem;">
+                            {% csrf_token %}
+                            <label style="font-size: 0.9rem; color: #666;">Qtd:</label>
+                            <input type="number"
+                                   name="quantity"
+                                   value="{{ item.quantity }}"
+                                   min="1"
+                                   max="{{ item.product.stock_quantity }}"
+                                   style="width: 70px; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                            <button type="submit"
+                                    style="padding: 0.5rem 1rem; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.9rem;">
+                                Atualizar
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Item Total and Remove -->
+                    <div style="text-align: right;">
+                        <p style="font-size: 1.3rem; font-weight: bold; color: #2c3e50; margin-bottom: 1rem;">
+                            R$ {{ item.get_total }}
+                        </p>
+                        <a href="{% url 'ecommerce:remove_from_cart' item.id %}"
+                           onclick="return confirm('Deseja remover este item do carrinho?')"
+                           style="display: inline-block; padding: 0.5rem 1rem; background: #e74c3c; color: white; text-decoration: none; border-radius: 5px; font-size: 0.9rem;">
+                            Remover
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Cart Summary -->
+            <div>
+                <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 20px;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #eee;">
+                        Resumo do Pedido
+                    </h2>
+
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: #666;">Subtotal:</span>
+                            <span style="font-weight: 600;">R$ {{ cart.get_total }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: #666;">Frete:</span>
+                            <span style="font-weight: 600; color: #27ae60;">Grátis</span>
+                        </div>
+                    </div>
+
+                    <div style="padding-top: 1rem; border-top: 2px solid #eee; margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 1.2rem; font-weight: bold;">Total:</span>
+                            <span style="font-size: 1.8rem; font-weight: bold; color: #27ae60;">
+                                R$ {{ cart.get_total }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'ecommerce:checkout' %}"
+                       style="display: block; text-align: center; padding: 1rem; background: #27ae60; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 1.1rem; margin-bottom: 1rem;">
+                        Finalizar Compra
+                    </a>
+
+                    <a href="{% url 'ecommerce:product_list' %}"
+                       style="display: block; text-align: center; padding: 1rem; background: #f5f5f5; color: #666; text-decoration: none; border-radius: 8px; font-weight: 600;">
+                        Continuar Comprando
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 4rem 0;">
+            <div style="font-size: 5rem; margin-bottom: 1rem;">🛒</div>
+            <p style="font-size: 1.5rem; color: #999; margin-bottom: 1rem;">
+                Seu carrinho está vazio
+            </p>
+            <a href="{% url 'ecommerce:product_list' %}"
+               style="display: inline-block; padding: 1rem 2rem; background: #3498db; color: white; text-decoration: none; border-radius: 5px; font-weight: 600; font-size: 1.1rem;">
+                Começar a Comprar
+            </a>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<style>
+@media (max-width: 768px) {
+    .cart > .container > div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    .cart [style*="grid-template-columns: 120px"] {
+        grid-template-columns: 1fr !important;
+        text-align: center;
+    }
+}
+</style>
+{% endblock %}

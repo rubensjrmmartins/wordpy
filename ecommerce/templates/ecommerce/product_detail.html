@@ -1,0 +1,176 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - {{ site_settings.site_name }}{% endblock %}
+
+{% block meta_description %}{{ product.short_description|default:product.description|striptags|truncatewords:30 }}{% endblock %}
+
+{% block content %}
+<div class="product-detail" style="padding: 3rem 0;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+
+        <!-- Breadcrumb -->
+        <nav style="margin-bottom: 2rem; font-size: 0.9rem;">
+            <a href="/" style="color: #3498db; text-decoration: none;">Home</a>
+            <span style="margin: 0 0.5rem; color: #999;">›</span>
+            <a href="{% url 'ecommerce:product_list' %}" style="color: #3498db; text-decoration: none;">Produtos</a>
+            {% if product.category %}
+            <span style="margin: 0 0.5rem; color: #999;">›</span>
+            <a href="{% url 'ecommerce:category_products' product.category.slug %}" style="color: #3498db; text-decoration: none;">
+                {{ product.category.name }}
+            </a>
+            {% endif %}
+            <span style="margin: 0 0.5rem; color: #999;">›</span>
+            <span style="color: #666;">{{ product.name }}</span>
+        </nav>
+
+        <!-- Product Info -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 4rem;">
+
+            <!-- Product Image -->
+            <div>
+                {% if product.featured_image %}
+                <img src="{{ product.featured_image.url }}"
+                     alt="{{ product.name }}"
+                     style="width: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                {% else %}
+                <div style="width: 100%; height: 500px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 5rem;">
+                    📦
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Product Details -->
+            <div>
+                <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: #2c3e50;">
+                    {{ product.name }}
+                </h1>
+
+                {% if product.category %}
+                <p style="color: #666; margin-bottom: 1rem;">
+                    <strong>Categoria:</strong>
+                    <a href="{% url 'ecommerce:category_products' product.category.slug %}"
+                       style="color: #3498db; text-decoration: none;">
+                        {{ product.category.name }}
+                    </a>
+                </p>
+                {% endif %}
+
+                {% if product.short_description %}
+                <p style="font-size: 1.1rem; color: #666; margin-bottom: 2rem; line-height: 1.6;">
+                    {{ product.short_description }}
+                </p>
+                {% endif %}
+
+                <!-- Price -->
+                <div style="margin-bottom: 2rem;">
+                    {% if product.compare_price and product.price < product.compare_price %}
+                    <div style="margin-bottom: 0.5rem;">
+                        <span style="font-size: 1.2rem; color: #999; text-decoration: line-through;">
+                            R$ {{ product.compare_price }}
+                        </span>
+                        <span style="background: #e74c3c; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.9rem; margin-left: 0.5rem;">
+                            {% widthratio product.compare_price|add:"0"|floatformat:0|add:"0" product.price|add:"0"|floatformat:0|add:"0" 100 as discount %}
+                            -{{ 100|add:discount|add:"-100" }}%
+                        </span>
+                    </div>
+                    {% endif %}
+                    <div style="font-size: 2.5rem; font-weight: bold; color: #27ae60;">
+                        R$ {{ product.price }}
+                    </div>
+                </div>
+
+                <!-- Stock Status -->
+                <div style="margin-bottom: 2rem;">
+                    {% if product.stock_quantity > 0 %}
+                    <p style="color: #27ae60; font-weight: 500;">
+                        ✓ Em estoque ({{ product.stock_quantity }} unidades disponíveis)
+                    </p>
+                    {% else %}
+                    <p style="color: #e74c3c; font-weight: 500;">
+                        ✗ Produto esgotado
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- SKU -->
+                <p style="color: #999; font-size: 0.9rem; margin-bottom: 2rem;">
+                    <strong>SKU:</strong> {{ product.sku }}
+                </p>
+
+                <!-- Add to Cart Button -->
+                {% if product.stock_quantity > 0 %}
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'ecommerce:add_to_cart' product.id %}"
+                       style="display: inline-block; background: #3498db; color: white; padding: 1rem 2.5rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: background 0.3s;">
+                        🛒 Adicionar ao Carrinho
+                    </a>
+                    {% else %}
+                    <a href="{% url 'accounts:login' %}?next={{ request.path }}"
+                       style="display: inline-block; background: #3498db; color: white; padding: 1rem 2.5rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1.1rem;">
+                        Faça login para comprar
+                    </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Product Description -->
+        <div style="margin-bottom: 4rem;">
+            <h2 style="font-size: 2rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #eee;">
+                Descrição do Produto
+            </h2>
+            <div style="line-height: 1.8; color: #444;">
+                {{ product.description|safe }}
+            </div>
+        </div>
+
+        <!-- Related Products -->
+        {% if related_products %}
+        <div>
+            <h2 style="font-size: 2rem; margin-bottom: 2rem; text-align: center;">
+                Produtos Relacionados
+            </h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2rem;">
+                {% for related in related_products %}
+                <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                    <a href="{% url 'ecommerce:product_detail' related.slug %}" style="text-decoration: none; color: inherit;">
+                        {% if related.featured_image %}
+                        <img src="{{ related.featured_image.url }}"
+                             alt="{{ related.name }}"
+                             style="width: 100%; height: 200px; object-fit: cover;">
+                        {% else %}
+                        <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                            📦
+                        </div>
+                        {% endif %}
+                        <div style="padding: 1rem;">
+                            <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: #2c3e50;">
+                                {{ related.name }}
+                            </h3>
+                            <p style="font-size: 1.2rem; font-weight: bold; color: #27ae60;">
+                                R$ {{ related.price }}
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<style>
+.product-detail a[href*="add_to_cart"]:hover {
+    background: #2980b9 !important;
+}
+
+@media (max-width: 768px) {
+    .product-detail > .container > div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+{% endblock %}

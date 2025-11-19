@@ -1,0 +1,128 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}{{ category.name }} - {{ site_settings.site_name }}{% endblock %}
+
+{% block content %}
+<div class="category-products" style="padding: 3rem 0;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+
+        <!-- Breadcrumb -->
+        <nav style="margin-bottom: 2rem; font-size: 0.9rem;">
+            <a href="/" style="color: #3498db; text-decoration: none;">Home</a>
+            <span style="margin: 0 0.5rem; color: #999;">›</span>
+            <a href="{% url 'ecommerce:product_list' %}" style="color: #3498db; text-decoration: none;">Produtos</a>
+            <span style="margin: 0 0.5rem; color: #999;">›</span>
+            <span style="color: #666;">{{ category.name }}</span>
+        </nav>
+
+        <!-- Category Header -->
+        <div style="text-align: center; margin-bottom: 3rem;">
+            {% if category.image %}
+            <img src="{{ category.image.url }}"
+                 alt="{{ category.name }}"
+                 style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            {% endif %}
+
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">
+                {{ category.name }}
+            </h1>
+
+            {% if category.description %}
+            <p style="font-size: 1.1rem; color: #666; max-width: 700px; margin: 0 auto;">
+                {{ category.description }}
+            </p>
+            {% endif %}
+
+            <p style="margin-top: 1rem; color: #999;">
+                {{ products.count }} produto(s) nesta categoria
+            </p>
+        </div>
+
+        <!-- Products Grid -->
+        {% if products %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
+            {% for product in products %}
+            <div class="product-card" style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s;">
+                <a href="{% url 'ecommerce:product_detail' product.slug %}" style="text-decoration: none; color: inherit;">
+
+                    <!-- Product Image -->
+                    {% if product.featured_image %}
+                    <div style="width: 100%; height: 250px; overflow: hidden; background: #f5f5f5;">
+                        <img src="{{ product.featured_image.url }}"
+                             alt="{{ product.name }}"
+                             style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    {% else %}
+                    <div style="width: 100%; height: 250px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                        📦
+                    </div>
+                    {% endif %}
+
+                    <!-- Product Info -->
+                    <div style="padding: 1.5rem;">
+                        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: #2c3e50; height: 2.4em; overflow: hidden; line-height: 1.2;">
+                            {{ product.name }}
+                        </h3>
+
+                        {% if product.short_description %}
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem; height: 3em; overflow: hidden; line-height: 1.5;">
+                            {{ product.short_description|truncatewords:15 }}
+                        </p>
+                        {% endif %}
+
+                        <!-- Price -->
+                        <div style="margin-bottom: 1rem;">
+                            {% if product.compare_price and product.price < product.compare_price %}
+                            <div>
+                                <span style="font-size: 0.9rem; color: #999; text-decoration: line-through; margin-right: 0.5rem;">
+                                    R$ {{ product.compare_price }}
+                                </span>
+                            </div>
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #e74c3c;">
+                                R$ {{ product.price }}
+                            </div>
+                            {% else %}
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #2c3e50;">
+                                R$ {{ product.price }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Stock Status -->
+                        {% if product.stock_quantity > 0 %}
+                        <span style="font-size: 0.85rem; color: #27ae60; font-weight: 500;">
+                            ✓ Em estoque
+                        </span>
+                        {% else %}
+                        <span style="font-size: 0.85rem; color: #e74c3c; font-weight: 500;">
+                            ✗ Esgotado
+                        </span>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 4rem 0;">
+            <p style="font-size: 1.5rem; color: #999; margin-bottom: 1rem;">
+                😕 Nenhum produto nesta categoria ainda
+            </p>
+            <a href="{% url 'ecommerce:product_list' %}"
+               style="display: inline-block; padding: 0.75rem 2rem; background: #3498db; color: white; text-decoration: none; border-radius: 5px; font-weight: 600;">
+                Ver Todos os Produtos
+            </a>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<style>
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15) !important;
+}
+</style>
+{% endblock %}

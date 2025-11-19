@@ -49,7 +49,6 @@ def dashboard_stats(request):
     recent_orders = Order.objects.order_by('-created_at')[:5]
 
     # Produtos mais vendidos
-    from django.db.models import Sum
     bestsellers = Product.objects.annotate(
         total_sold=Sum('orderitem__quantity')
     ).filter(

@@ -1,0 +1,143 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Pedido Confirmado - {{ site_settings.site_name }}{% endblock %}
+
+{% block content %}
+<div class="order-success" style="padding: 3rem 0;">
+    <div class="container" style="max-width: 800px; margin: 0 auto; padding: 0 20px;">
+
+        <!-- Success Icon -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="display: inline-block; width: 120px; height: 120px; background: #27ae60; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white; margin-bottom: 1rem;">
+                ✓
+            </div>
+            <h1 style="font-size: 2.5rem; color: #27ae60; margin-bottom: 0.5rem;">
+                Pedido Confirmado!
+            </h1>
+            <p style="font-size: 1.2rem; color: #666;">
+                Obrigado pela sua compra
+            </p>
+        </div>
+
+        <!-- Order Details -->
+        <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #eee;">
+                Detalhes do Pedido
+            </h2>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.25rem;">Número do Pedido:</p>
+                    <p style="font-weight: bold; font-size: 1.2rem;">#{{ order.id }}</p>
+                </div>
+                <div>
+                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.25rem;">Data:</p>
+                    <p style="font-weight: bold;">{{ order.created_at|date:"d/m/Y H:i" }}</p>
+                </div>
+                <div>
+                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.25rem;">Status:</p>
+                    <p style="font-weight: bold; color: #f39c12;">
+                        {% if order.status == 'pending' %}
+                            ⏳ Pendente
+                        {% elif order.status == 'processing' %}
+                            🔄 Processando
+                        {% elif order.status == 'shipped' %}
+                            📦 Enviado
+                        {% elif order.status == 'delivered' %}
+                            ✓ Entregue
+                        {% elif order.status == 'cancelled' %}
+                            ✗ Cancelado
+                        {% endif %}
+                    </p>
+                </div>
+                <div>
+                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.25rem;">Pagamento:</p>
+                    <p style="font-weight: bold; color: #f39c12;">
+                        {% if order.payment_status == 'pending' %}
+                            ⏳ Aguardando
+                        {% elif order.payment_status == 'paid' %}
+                            ✓ Pago
+                        {% elif order.payment_status == 'failed' %}
+                            ✗ Falhou
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Order Items -->
+            <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">Itens do Pedido:</h3>
+            <div style="margin-bottom: 1.5rem;">
+                {% for item in order.items.all %}
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f5f5f5; border-radius: 5px; margin-bottom: 0.5rem;">
+                    <div>
+                        <p style="font-weight: 600; margin-bottom: 0.25rem;">{{ item.product.name }}</p>
+                        <p style="font-size: 0.9rem; color: #666;">Quantidade: {{ item.quantity }}</p>
+                    </div>
+                    <p style="font-weight: bold; color: #27ae60;">R$ {{ item.get_total }}</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Total -->
+            <div style="padding-top: 1rem; border-top: 2px solid #eee;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 1.3rem; font-weight: bold;">Total:</span>
+                    <span style="font-size: 2rem; font-weight: bold; color: #27ae60;">
+                        R$ {{ order.total }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div style="background: #e8f5e9; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #27ae60;">
+            <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: #27ae60;">
+                📧 Próximos Passos
+            </h3>
+            <ul style="line-height: 2; color: #666; list-style-position: inside;">
+                <li>Você receberá um email de confirmação em breve</li>
+                <li>Acompanhe o status do seu pedido através do painel de usuário</li>
+                <li>Você será notificado quando o pedido for enviado</li>
+                <li>Em caso de dúvidas, entre em contato conosco</li>
+            </ul>
+        </div>
+
+        <!-- Actions -->
+        <div style="text-align: center;">
+            <a href="{% url 'ecommerce:product_list' %}"
+               style="display: inline-block; padding: 1rem 2.5rem; background: #3498db; color: white; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 1.1rem; margin-right: 1rem;">
+                Continuar Comprando
+            </a>
+            <a href="/"
+               style="display: inline-block; padding: 1rem 2.5rem; background: #95a5a6; color: white; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 1.1rem;">
+                Voltar ao Início
+            </a>
+        </div>
+
+        <!-- Thank You Message -->
+        <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #eee;">
+            <p style="font-size: 1.2rem; color: #666; line-height: 1.8;">
+                💚 Agradecemos pela sua preferência!<br>
+                <small style="font-size: 1rem;">
+                    Pedido #{{ order.id }} • {{ site_settings.site_name }}
+                </small>
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<style>
+@media (max-width: 768px) {
+    .order-success [style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    .order-success a {
+        display: block !important;
+        margin: 0.5rem 0 !important;
+    }
+}
+</style>
+{% endblock %}

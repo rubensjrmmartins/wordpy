@@ -314,6 +314,10 @@ class Cart(models.Model):
         """Retorna o subtotal do carrinho"""
         return sum(item.total_price for item in self.items.all())
 
+    def get_total(self):
+        """Alias para subtotal - retorna o total do carrinho"""
+        return self.subtotal
+
 
 class CartItem(models.Model):
     """Itens do carrinho"""
@@ -365,6 +369,10 @@ class CartItem(models.Model):
     def total_price(self):
         """Retorna o preço total do item (quantidade x preço)"""
         return self.quantity * self.price
+
+    def get_total(self):
+        """Alias para total_price - retorna o total do item"""
+        return self.total_price
 
 
 class Order(models.Model):

@@ -1,0 +1,126 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Conversa com {{ other_participant.username }} - {{ site_settings.site_name }}{% endblock %}
+
+{% block content %}
+<div class="conversation-detail" style="padding: 2rem 0;">
+    <div class="container" style="max-width: 900px; margin: 0 auto; padding: 0 20px;">
+
+        <!-- Header -->
+        <div style="background: white; padding: 1.5rem; border-radius: 8px 8px 0 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center;">
+                <a href="{% url 'messaging:conversation_list' %}"
+                   style="margin-right: 1rem; color: #666; text-decoration: none;">
+                    ← Voltar
+                </a>
+                <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem; font-weight: bold; margin-right: 1rem;">
+                    {{ other_participant.username|slice:":1"|upper }}
+                </div>
+                <div>
+                    <h2 style="font-size: 1.2rem; margin-bottom: 0.25rem;">
+                        {{ other_participant.get_full_name|default:other_participant.username }}
+                    </h2>
+                    <p style="color: #999; font-size: 0.9rem;">@{{ other_participant.username }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div id="messages-container"
+             style="background: #f8f9fa; padding: 2rem; min-height: 400px; max-height: 500px; overflow-y: auto; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+
+            {% if messages %}
+                {% for msg in messages %}
+                <div style="margin-bottom: 1.5rem; display: flex; {% if msg.sender == user %}justify-content: flex-end;{% else %}justify-content: flex-start;{% endif %}">
+                    <div style="max-width: 70%; {% if msg.sender == user %}background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;{% else %}background: white; color: #333;{% endif %} padding: 1rem; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                        <p style="margin-bottom: 0.5rem; word-wrap: break-word;">{{ msg.content }}</p>
+                        <p style="font-size: 0.75rem; opacity: 0.8; text-align: right;">
+                            {{ msg.created_at|date:"d/m/Y H:i" }}
+                        </p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div style="text-align: center; padding: 3rem; color: #999;">
+                <p style="font-size: 1.1rem;">Nenhuma mensagem ainda</p>
+                <p>Envie a primeira mensagem abaixo!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Send Form -->
+        <form method="post" action="{% url 'messaging:send_message' conversation.id %}"
+              style="background: white; padding: 1.5rem; border-radius: 0 0 8px 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            {% csrf_token %}
+
+            <div style="display: flex; gap: 1rem;">
+                <textarea name="message"
+                          placeholder="Digite sua mensagem..."
+                          rows="2"
+                          required
+                          style="flex: 1; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 1rem; resize: vertical; min-height: 60px;"></textarea>
+
+                <button type="submit"
+                        style="padding: 0.75rem 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; align-self: flex-end;">
+                    Enviar
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<style>
+#messages-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#messages-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#messages-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+#messages-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+form button:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+form textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+@media (max-width: 768px) {
+    form > div {
+        flex-direction: column !important;
+    }
+
+    form button {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+// Scroll para o final das mensagens ao carregar
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('messages-container');
+    container.scrollTop = container.scrollHeight;
+});
+
+// Auto-expandir textarea
+document.querySelector('textarea[name="message"]').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+});
+</script>
+{% endblock %}

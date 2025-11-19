@@ -162,6 +162,7 @@ class Section(models.Model):
         ('cta', 'Call to Action'),
         ('features', 'Recursos/Features'),
         ('banner_carousel', 'Carrossel de Banners'),
+        ('products', 'Produtos'),
         ('html', 'HTML Customizado'),
     ]
 
